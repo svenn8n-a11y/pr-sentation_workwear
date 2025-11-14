@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herausforderungen im Workwear-Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. THE SETUP */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  /* Dark theme background */
+  background-color: #334155; /* Slate 700 */
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px 0;
+  place-items: center;
+  /* Verhindert Springen beim Folienwechsel */
+  overflow: hidden;
+}
+
+.slide-container {
+  align-items: center;
+  /* Dark theme slide background */
+  background-color: #1e293b; /* Slate 900 */
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  height: 720px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px;
+  position: relative;
+  width: min(1280px, calc(100vw - 40px));
+  /* Standardmäßig alle Folien ausblenden */
+  display: none; 
+}
+
+.slide-container:first-of-type {
+  display: flex;
+}
+
+/* Spezifische Display-Typen für Folien. 
+  Das JS wird 'display: none' entfernen und diese wiederherstellen.
+*/
+.slide-container.active {
+  display: flex;
+}
+
+.slide-container.bleed-image-layout {
+  display: grid; /* Behält das spezielle Grid-Layout bei */
+}
+
+/* Aktiv-Status für die Bleed-Folie */
+.slide-container.bleed-image-layout.active {
+  display: grid;
+}
+
+
+/* 1.1 BACKGROUND STYLING */
+.slide-container::before {
+  content: '';
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.slide-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* 2. CONSISTENT TYPOGRAPHY (Dark Theme) */
+
+/* Headings Font */
+.slide-container h1,
+.slide-container h2,
+.slide-container h3 {
+  /* Light text for dark BG */
+  color: #f1f5f9; /* Slate 100 */
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+/* Body Text Font */
+.slide-container p,
+.slide-container li,
+.slide-container .subtitle,
+.slide-container .number-label,
+.slide-container .legend li,
+.slide-container .chart-summary,
+.slide-container .bar .label,
+.slide-container th,
+.slide-container td,
+.slide-container .alternating-text-tile p,
+.slide-container .bleed-text-side p {
+  /* Light body text for dark BG */
+  color: #cbd5e1; /* Slate 300 */
+  font-family: 'Lato', sans-serif;
+}
+
+/* Consistent Font Sizes */
+.slide-container h1 {
+  font-size: 70px;
+}
+
+.slide-container .slide-title {
+  /* This is an h2 */
+  font-size: 40px;
+  font-weight: 400;
+  margin-bottom: 40px;
+  text-align: left;
+  width: 100%;
+  /* Light text */
+  color: #f1f5f9;
+}
+
+.slide-container h3 {
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 15px;
+}
+
+/* Unified body text size */
+.slide-container p,
+.slide-container li,
+.slide-container .subtitle,
+.slide-container .legend li,
+.slide-container .chart-summary,
+.slide-container .bar .label,
+.slide-container th,
+.slide-container td,
+.slide-container .alternating-text-tile p,
+.slide-container .bleed-text-side p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.slide-container .subtitle {
+  font-weight: 400;
+  margin: 20px auto;
+  /* Light subtitle */
+  color: #cbd5e1;
+}
+
+.slide-container .content-area {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  width: 100%;
+}
+
+/* 3. LAYOUT DEFINITIONS (Dark Theme) */
+
+.title-layout {
+  text-align: center;
+}
+
+.two-column {
+  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  width: 100%;
+}
+
+.two-column.tiled {
+  align-items: stretch;
+}
+
+.two-column.tiled>div {
+  /* Darker tile */
+  background-color: #334155; /* Slate 700 */
+  border-radius: 12px;
+  border: 1px solid #475569; /* Slate 600 */
+  padding: 40px;
+  text-align: center;
+}
+
+.two-column.tiled h3 {
+  /* Accent color */
+  color: #22c55e; /* Green 500 */
+}
+
+.two-column ul {
+  list-style: disc;
+  margin: 0;
+  padding-left: 25px;
+}
+
+.two-column li {
+  margin-bottom: 15px;
+}
+
+.image-wrapper {
+  border-radius: 12px;
+  height: 350px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.image-wrapper img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.two-column .image-wrapper img {
+  object-fit: contain;
+}
+
+.tiled-content {
+  align-items: stretch;
+  display: flex;
+  gap: 20px; /* Reduced gap for 4 tiles */
+  justify-content: center;
+  width: 100%;
+}
+
+.tile {
+  align-items: center;
+  /* Darker tile */
+  background-color: #334155; /* Slate 700 */
+  border-radius: 12px;
+  border: 1px solid #475569; /* Slate 600 */
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Allows 4 tiles to fit */
+  justify-content: flex-start;
+  padding: 30px;
+  text-align: center;
+}
+
+.tile .icon {
+  /* Accent color */
+  color: #22c55e; /* Green 500 */
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+/* NEUE REGEL: Stellt sicher, dass SVGs im Icon-Container die richtige Größe haben */
+.tile .icon svg {
+  width: 1em; /* Nimmt die Schriftgröße (48px) als Breite/Höhe */
+  height: 1em;
+}
+
+.tile h3 {
+    color: #f1f5f9; /* Light text */
+    font-size: 22px; /* Smaller font for 4 tiles */
+}
+
+.tile p {
+    font-size: 16px; /* Smaller font for 4 tiles */
+}
+
+
+.bullet-list {
+  max-width: 900px;
+  width: 100%;
+}
+
+.bullet-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bullet-list li {
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-left: 40px;
+  position: relative;
+}
+
+.bullet-list i {
+  /* Accent color */
+  color: #22c55e; /* Green 500 */
+  font-size: 24px;
+  left: 0;
+  margin-top: 5px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+}
+
+.bullet-list li strong {
+  /* Light text */
+  color: #f1f5f9;
+  font-weight: 700;
+}
+
+.image-tile {
+  flex: 1;
+  text-align: center;
+}
+
+.image-tile .image-wrapper {
+  height: 225px;
+  margin-bottom: 20px;
+}
+
+.full-bg-image {
+  background-position: center;
+  background-size: cover;
+}
+
+.full-bg-image .content-overlay {
+  text-align: center;
+}
+
+/* Dark theme override for full bg image text */
+.full-bg-image h2,
+.full-bg-image p {
+  color: #ffffff; /* White text on image */
+  text-shadow: 0 0 10px rgba(0,0,0,0.7); /* Shadow for legibility */
+}
+
+.highlight-numbers-layout>div:first-child {
+  flex: 0 0 40%;
+  text-align: center;
+}
+
+.highlight-numbers-layout .number {
+  /* Accent color */
+  color: #22c55e; /* Green 500 */
+  font-size: 150px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1;
+}
+
+.highlight-numbers-layout .number-label {
+  font-size: 24px;
+  font-weight: 700;
+  /* Light text */
+  color: #f1f5f9;
+}
+
+/* Section Title */
+.section-title-layout {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.section-title-layout h2 {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.section-title-layout p {
+  font-size: 22px;
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+.section-title-layout hr {
+  /* Accent color */
+  background-color: #22c55e; /* Green 500 */
+  border: none;
+  height: 5px;
+  margin: 30px auto;
+  width: 100px;
+}
+
+/* Quote Layout */
+.quote-layout {
+  text-align: center;
+  width: 80%;
+}
+
+.quote-layout blockquote {
+  /* Light text */
+  color: #f1f5f9;
+  font-size: 48px;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.4;
+  margin: 0 0 30px 0;
+  padding: 0 40px;
+  position: relative;
+}
+
+.quote-layout blockquote::before,
+.quote-layout blockquote::after {
+  /* Lighter accent */
+  color: #475569; /* Slate 600 */
+  content: '"';
+  font-size: 100px;
+  line-height: 0;
+  position: absolute;
+}
+
+.quote-layout blockquote::before {
+  left: -10px;
+  top: 30px;
+}
+
+.quote-layout blockquote::after {
+  bottom: 10px;
+  right: -10px;
+}
+
+.quote-layout cite {
+  /* Light text */
+  color: #cbd5e1;
+  font-size: 22px;
+  font-style: normal;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Q&A Layout */
+.qa-layout {
+  text-align: center;
+  width: 100%;
+  align-self: center;
+}
+
+.qa-layout h2 {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.qa-layout p {
+  font-size: 22px;
+}
+
+.qa-layout .contact-info {
+  /* Light text */
+  color: #f1f5f9;
+  font-size: 20px;
+  margin-top: 40px;
+}
+
+/* `Bleed_Image_Right` layout (Dark Theme) */
+.slide-container.bleed-image-layout {
+  align-items: start;
+  /* display: grid; */ /* Wird jetzt durch JS gesteuert */
+  gap: 50px;
+  grid-template-columns: 1fr 1fr;
+  padding: 0;
+}
+
+.slide-container.bleed-image-layout>.content-container {
+  padding: 60px 0 60px 60px;
+}
+
+.slide-container.bleed-image-layout>.image-container {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.slide-container.bleed-image-layout img.bleed-image-side {
+  border-radius: 0 8px 8px 0;
+  height: 100%;
+  max-width: 100%;
+  max-height: 720px;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+/* Dark theme override for bleed text */
+.slide-container.bleed-image-layout .bleed-text-side h3 {
+    color: #f1f5f9;
+}
+.slide-container.bleed-image-layout .bleed-text-side p {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* ==============================================
+NEU: Interaktive Präsentations-Stile
+==============================================
+*/
+
+/* Container für die Navigationspfeile */
+#navigation-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+
+#navigation-controls button {
+    background-color: #22c55e; /* Green 500 */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+#navigation-controls button:hover:not(:disabled) {
+    background-color: #16a34a; /* Green 600 */
+    transform: translateY(-2px);
+}
+
+#navigation-controls button:disabled {
+    background-color: #475569; /* Slate 600 */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Container für die Navigationspunkte */
+#pagination-dots {
+    position: fixed;
+    bottom: 85px; /* Über den Pfeilen */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.pagination-dot {
+    appearance: none;
+    background: none;
+    width: 12px;
+    height: 12px;
+    background-color: #475569; /* Slate 600 - Inaktiv */
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.pagination-dot:hover {
+    background-color: #64748b; /* Slate 500 */
+}
+
+.pagination-dot.active {
+    background-color: #22c55e; /* Green 500 - Aktiv */
+}
+
+@media (max-width: 1200px) {
+  body {
+    overflow-y: auto;
+    padding: 20px;
+  }
+
+  .slide-container {
+    height: auto;
+    max-height: none;
+    padding: 50px 40px;
+  }
+
+  .slide-container.bleed-image-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .slide-container.bleed-image-layout > .content-container {
+    padding: 40px;
+  }
+
+  .slide-container.bleed-image-layout > .image-container {
+    order: -1;
+    max-height: 320px;
+  }
+
+  .slide-container.bleed-image-layout img.bleed-image-side {
+    border-radius: 8px 8px 0 0;
+    height: 100%;
+    object-position: center top;
+  }
+}
+
+@media (max-width: 900px) {
+  .slide-container {
+    padding: 40px 24px;
+  }
+
+  .slide-container h1 {
+    font-size: 48px;
+  }
+
+  .slide-container .slide-title {
+    font-size: 32px;
+  }
+
+  .slide-container h3 {
+    font-size: 26px;
+  }
+
+  .slide-container p,
+  .slide-container li,
+  .slide-container .subtitle {
+    font-size: 16px;
+  }
+
+  .two-column {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .tiled-content {
+    flex-wrap: wrap;
+  }
+
+  .tile {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 240px;
+  }
+
+  #pagination-dots {
+    bottom: 110px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
+
+  .slide-container {
+    padding: 30px 20px;
+  }
+
+  .tile {
+    flex: 1 1 100%;
+  }
+
+  #navigation-controls {
+    bottom: 12px;
+  }
+
+  #pagination-dots {
+    bottom: 80px;
+  }
+
+  #navigation-controls button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+<!-- Alle Folien-Container bleiben unverändert --><!-- Slide 1: Title_Slide --><div class="slide-container" id="slide1">
+    <div class="title-layout">
+        <h1>Herausforderungen im<br>Workwear-Management</h1>
+        <p class="subtitle">Ein Überblick über unterschätzte Komplexitätstreiber</p>
+    </div>
+</div>
+
+<!-- Slide 2: Bleed_Image_Right --><div class="slide-container bleed-image-layout" id="slide2">
+    <div class="content-container">
+        <!-- The .slide-title is hidden, using h3 for content title --><h2 class="slide-title" style="display: none;">Das unterschätzte Problem</h2>
+        <div class="content-area">
+            <div class="bleed-text-side">
+                <h3>Das unterschätzte Problem</h3>
+                <p>Arbeitskleidung und Arbeitsschutz werden oft unterschätzt, da der administrative Aufwand und die langfristigen Auswirkungen auf Effizienz und Compliance nicht sofort ersichtlich sind.</p>
+                <p>Viele Unternehmen erkennen erst später, wie viel Potenzial durch eine optimierte Lösung freigesetzt werden kann.</p>
+            </div>
+        </div>
+    </div>
+    <div class="image-container">
+        <img
+            class="bleed-image-side"
+            src="https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            alt="Abstrakte Darstellung von administrativem Aufwand"
+            onerror="this.onerror=null;this.src='https://placehold.co/640x720/1e293b/cbd5e1?text=Bild+nicht+geladen';">
+    </div>
+</div>
+
+<!-- Slide 3: Section_Title --><div class="slide-container" id="slide3">
+    <div class="section-title-layout">
+        <hr>
+        <h2>Die 12 Kernherausforderungen</h2>
+        <p>Ein tiefer Einblick in die täglichen Hürden</p>
+    </div>
+</div>
+
+<!-- Slide 4: Tiled_Text_With_Icons (4 Tiles) --><div class="slide-container" id="slide4">
+    <h2 class="slide-title">Herausforderungen: Prozesse &amp; Personal</h2>
+    <div class="content-area">
+        <!-- Using 4 tiles, they will flow in the flex container --><div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-users-gear"></i></div>
+                <h3>Mitarbeiterwechsel</h3>
+                <p>Ständige Anpassung von Budgets und Bestellungen.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-eye-slash"></i></div>
+                <h3>Intransparenz</h3>
+                <p>Schwierigkeiten, Bestände, Verbräuche und Budgets zu überblicken.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-tasks"></i></div>
+                <h3>Anforderungen</h3>
+                <p>Unterschiedliche Bedürfnisse für Arbeitskleidung und PSA je nach Job.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-pen-ruler"></i></div>
+                <h3>Manuelle Prozesse</h3>
+                <p>Unübersichtliche Bestell- und Budgetprozesse führen zu Fehlern.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Tiled_Text_With_Icons (4 Tiles) --><div class="slide-container" id="slide5">
+    <h2 class="slide-title">Herausforderungen: Kosten &amp; Systeme</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-comments-dollar"></i></div>
+                <h3>Reklamationen</h3>
+                <p>Verzögerungen und Fehler führen zu Unzufriedenheit und Mehrkosten.</p>
+            </div>
+            <div class="tile">
+                <div class="icon">
+                    <!-- Ersetzt: <i class="fa-solid fa-chart-line-down"></i> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6h-6z"></path>
+                    </svg>
+                </div>
+                <h3>Kostenüberschreitung</h3>
+                <p>Hohe Ausgaben durch Fehlbestellungen und unsachgemäße Lagerung.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-cogs"></i></div>
+                <h3>Integration</h3>
+                <p>Probleme bei der Anbindung an bestehende ERP- und Personalsysteme.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-arrows-left-right-to-line"></i></div>
+                <h3>Mangelnde Flexibilität</h3>
+                <p>Schwierigkeiten, auf saisonale Schwankungen schnell zu reagieren.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Tiled_Text_With_Icons (4 Tiles) --><div class="slide-container" id="slide6">
+    <h2 class="slide-title">Herausforderungen: Compliance &amp; Risiken</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-file-shield"></i></div>
+                <h3>Dokumentation</h3>
+                <p>Einhaltung und Nachweis von Arbeitsschutzbestimmungen wird erschwert.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-not-equal"></i></div>
+                <h3>Keine Standards</h3>
+                <p>Ineffiziente Abläufe durch unterschiedliche Prozesse in Abteilungen.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-shirt"></i></div>
+                <h3>Sonderanforderungen</h3>
+                <p>Individuelle Anpassungen (Logos, Größen) und deren Dokumentation.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>Sicherheitsrisiken</h3>
+                <p>Falsche oder nicht rechtzeitig gelieferte PSA können zu Unfällen führen.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Section_Title --><div class="slide-container" id="slide7">
+    <div class="section-title-layout">
+        <hr>
+        <h2>Auswirkungen &amp; Potenziale</h2>
+        <p>Warum ein Umdenken notwendig ist</p>
+    </div>
+</div>
+
+<!-- Slide 8: Quote --><div class="slide-container" id="slide8">
+    <h2 class="slide-title">Direkte Konsequenzen</h2>
+    <div class="content-area">
+        <div class="quote-layout">
+            <blockquote>Falsche oder nicht rechtzeitig gelieferte PSA können zu Sicherheitsproblemen und Unfällen führen.</blockquote>
+            <cite>Sicherheitsrisiken als direkte Folge von Ineffizienz</cite>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 9: Image_Right_Text_Left (Standard Bullets) --><div class="slide-container" id="slide9">
+    <h2 class="slide-title">Das ungenutzte Potenzial</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <div>
+                    <p>Die Komplexität ist hoch, aber beherrschbar. Die eigentliche Frage ist:</p>
+                    <p><strong>Wie viel Potenzial kann durch eine optimierte, digitalisierte und standardisierte Lösung freigesetzt werden?</strong></p>
+                    <ul>
+                        <li>Gesteigerte Effizienz</li>
+                        <li>Volle Kostenkontrolle</li>
+                        <li>Garantierte Compliance</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <div class="image-wrapper" style="height: 400px;">
+                    <img src="https://images.pexels.com/photos/6169033/pexels-photo-6169033.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Moderner Logistikmitarbeiter mit Tablet"
+                    onerror="this.onerror=null;this.src='https://placehold.co/550x400/1e293b/cbd5e1?text=Bild+nicht+geladen';">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 11: Full_Background_Image --><div class="slide-container full-bg-image" id="slide11" style="background-image: linear-gradient(rgba(30, 41, 59, 0.7), rgba(30, 41, 59, 0.7)), url('https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');">
+    <div class="content-overlay">
+        <h2 style="font-size:64px;">Effizienz. Compliance. Sicherheit.</h2>
+        <p>Der Wandel vom Kostenfaktor zum strategischen Vorteil.</p>
+    </div>
+</div>
+
+<!-- Slide 12: Q&amp;A --><div class="slide-container" id="slide12">
+    <div class="qa-layout">
+        <h2>Fragen?<br><span style="font-size: 48px; color: #cbd5e1; font-weight: 400;">Oder bereit für den nächsten Schritt?</span></h2>
+        <p style="margin-top: 30px; font-size: 22px;">Sie möchten tiefer eintauchen und konkrete Potenziale für Ihr Unternehmen entdecken?</p>
+        <p style="font-size: 24px; color: #22c55e; font-weight: 700; margin-top: 20px;">
+            Sprechen Sie uns an für ein unverbindliches Prozess-Audit!
+        </p>
+    </div>
+</div>
+
+
+<!-- 
+==============================================
+NEU: HTML für die Navigation
+==============================================
+--><div id="pagination-dots">
+    <!-- Punkte werden dynamisch per JS eingefügt --></div>
+
+<div id="navigation-controls">
+    <button id="prev-slide" type="button" title="Vorherige Folie (Pfeil links)" aria-label="Vorherige Folie">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <button id="next-slide" type="button" title="Nächste Folie (Pfeil rechts)" aria-label="Nächste Folie">
+        <i class="fas fa-arrow-right"></i>
+    </button>
+</div>
+
+
+<!-- 
+==============================================
+NEU: JavaScript für Interaktivität
+==============================================
+--><script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // 1. DOM-Elemente auswählen
+        const slides = document.querySelectorAll('.slide-container');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const dotsContainer = document.getElementById('pagination-dots');
+        dotsContainer.setAttribute('role', 'group');
+        dotsContainer.setAttribute('aria-label', 'Foliennavigation');
+
+        // 2. Zustand (State)
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        // 3. Funktionen
+
+        /**
+         * Zeigt eine bestimmte Folie basierend auf ihrem Index an.
+         */
+        function showSlide(index) {
+            // Index validieren
+            if (index < 0) {
+                index = 0;
+            }
+            if (index >= totalSlides) {
+                index = totalSlides - 1;
+            }
+
+            // Aktuellen Slide-Index aktualisieren
+            currentSlide = index;
+
+            // Alle Folien ausblenden
+            slides.forEach((slide, i) => {
+                // WICHTIG: 'display: none' entfernt die Folie aus dem Layout
+                slide.style.display = 'none';
+                slide.classList.remove('active');
+            });
+
+            // Die Ziel-Folie auswählen
+            const slideToShow = slides[currentSlide];
+            
+            // Korrekten Display-Wert wiederherstellen (flex oder grid)
+            // 'bleed-image-layout' benötigt 'grid', alle anderen 'flex'.
+            if (slideToShow.classList.contains('bleed-image-layout')) {
+                slideToShow.style.display = 'grid';
+            } else {
+                slideToShow.style.display = 'flex';
+            }
+            // Active-Klasse hinzufügen (für CSS-Selektoren, falls nötig)
+            slideToShow.classList.add('active');
+
+
+            // Buttons (de)aktivieren
+            updateNavigation();
+        }
+
+        /**
+         * Aktualisiert den Zustand der Pfeil-Buttons und der Punkte.
+         */
+        function updateNavigation() {
+            // Pfeil-Buttons
+            prevButton.disabled = (currentSlide === 0);
+            nextButton.disabled = (currentSlide === totalSlides - 1);
+
+            // Punkte (Dots)
+            const dots = document.querySelectorAll('.pagination-dot');
+            dots.forEach((dot, index) => {
+                const isActive = index === currentSlide;
+                dot.classList.toggle('active', isActive);
+                dot.setAttribute('aria-pressed', String(isActive));
+            });
+        }
+
+        /**
+         * Erstellt die Navigationspunkte dynamisch.
+         */
+        function createPaginationDots() {
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('pagination-dot');
+                dot.type = 'button';
+                dot.dataset.slide = i; // Speichert den Index im Data-Attribut
+                dot.setAttribute('aria-label', `Zur Folie ${i + 1} springen`);
+                dot.setAttribute('aria-pressed', 'false');
+
+                // Event Listener, um zur Folie zu springen
+                dot.addEventListener('click', () => {
+                    showSlide(i);
+                });
+
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        /**
+         * Steuert die Navigation über die Tastatur.
+         */
+        function handleKeydown(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') { // Leertaste auch für "vor"
+                if (currentSlide < totalSlides - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+        }
+
+        // 4. Initialisierung
+
+        function init() {
+            createPaginationDots(); // Punkte erstellen
+            showSlide(0); // Erste Folie anzeigen
+        }
+
+        // 5. Event Listeners starten
+        prevButton.addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        nextButton.addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        document.addEventListener('keydown', handleKeydown);
+
+        // Initialisierung starten
+        init();
+    });
+</script>
+
+</body>
+</html>
